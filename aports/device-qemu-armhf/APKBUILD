@@ -1,0 +1,24 @@
+pkgname=device-qemu-armhf
+pkgver=2
+pkgrel=2
+pkgdesc="Qemu ARMHF"
+url="https://github.com/postmarketOS"
+arch="noarch"
+license="MIT"
+depends="linux-qemu-armhf"
+makedepends=""
+install=""
+subpackages=""
+source="deviceinfo"
+options="!check"
+
+build() {
+	return 0
+}
+
+package() {
+	install -D -m644 "$srcdir"/deviceinfo \
+		"$pkgdir"/etc/deviceinfo
+}
+
+sha512sums="6a45bcb5e9b9ac4c0f9c4c246978af98d31cb878dbb8eb81fc21d7f6a670d4b5adf61633ce35a38ffb2cc4aa667e90ae681c0e91d94a6baf70621e8a91b54997  deviceinfo"
