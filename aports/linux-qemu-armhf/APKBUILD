@@ -17,7 +17,7 @@ case $pkgver in
 	*.*.*)  _kernver=${pkgver%.*};;
 	*.*) _kernver=$pkgver;;
 esac
-pkgrel=1
+pkgrel=2
 arch="armhf"
 pkgdesc="Qemu ARMHF kernel"
 url="https://github.com/torvalds/linux"
@@ -85,6 +85,9 @@ build() {
 package() {
 	install -Dm644 "$srcdir/build/arch/arm/boot/zImage" \
 		"$pkgdir/boot/vmlinuz-$_flavor"
+
+	install -Dm644 "$srcdir/build/arch/arm/boot/dts/vexpress-v2p-ca9.dtb" \
+		"$pkgdir/boot/vexpress-v2p-ca9.dtb"
 
 	install -D "$srcdir/build/include/config/kernel.release" \
 		"$pkgdir/usr/share/kernel/$_flavor/kernel.release"
