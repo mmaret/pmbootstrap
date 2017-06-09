@@ -3,8 +3,8 @@
 # Use only double quotes.
 
 deviceinfo_format_version="0"
-deviceinfo_name="Qemu ARMHF"
-deviceinfo_manufacturer="Qemu"
+deviceinfo_name="QEMU armhf"
+deviceinfo_manufacturer="QEMU"
 deviceinfo_date=""
 deviceinfo_keyboard="true"
 deviceinfo_nonfree="????"

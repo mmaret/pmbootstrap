@@ -1,7 +1,7 @@
 pkgname=device-qemu-armhf
 pkgver=2
 pkgrel=2
-pkgdesc="Qemu ARMHF"
+pkgdesc="QEMU armhf"
 url="https://github.com/postmarketOS"
 arch="noarch"
 license="MIT"
