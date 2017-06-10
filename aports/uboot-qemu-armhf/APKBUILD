@@ -1,0 +1,74 @@
+_vendor=qemu
+_flavor=qemu-armhf
+
+pkgname=uboot-${_flavor}
+pkgver=2017.05
+pkgrel=2
+arch="armhf"
+pkgdesc="Qemu ARMHF uboot"
+url="http://www.denx.de/wiki/U-Boot/WebHome"
+depends="postmarketos-mkinitfs"
+makedepends="perl sed installkernel bash gmp-dev bc elfutils-dev"
+options="!strip !check !tracedeps textrels"
+install=
+source="
+	$pkgname-$pkgver.tar.bz2::ftp://ftp.denx.de/pub/u-boot/u-boot-2017.05.tar.bz2
+"
+subpackages=""
+license="GPL2"
+
+_abi_release=${pkgver}
+_carch="arm"
+HOSTCC="${CC:-gcc}"
+HOSTCC="${HOSTCC#${CROSS_COMPILE}}"
+
+ksrcdir="$srcdir/u-boot-${pkgver}"
+
+prepare() {
+	local _patch_failed=
+	cd "$ksrcdir"
+
+	# first apply patches in specified order
+	for i in $source; do
+		case $i in
+		*.patch)
+			msg "Applying $i..."
+			if ! patch -s -p1 -N -i "$srcdir"/$i; then
+				echo $i >>failed
+				_patch_failed=1
+			fi
+			;;
+		esac
+	done
+
+	if ! [ -z "$_patch_failed" ]; then
+		error "The following patches failed:"
+		cat failed
+		return 1
+	fi
+
+	mkdir -p "$srcdir"/build
+	make -C "$ksrcdir" O="$srcdir"/build ARCH="$_carch" HOSTCC="$HOSTCC" \
+		vexpress_ca9x4_defconfig
+}
+
+
+
+# this is so we can do: 'abuild menuconfig' to reconfigure kernel
+menuconfig() {
+	cd "$srcdir"/build || return 1
+	make ARCH="$_carch" vexpress_ca9x4_defconfig
+}
+
+build() {
+	cd "$srcdir"/build
+	unset LDFLAGS
+	make ARCH="$_carch" CC="${CC:-gcc}" all	|| return 1
+}
+
+package() {
+	install -Dm644 "$srcdir/build/u-boot" \
+		"$pkgdir/boot/u-boot"
+}
+
+sha512sums="be270f9242a72b05463092a022bbabd54996762de1ff23bf7575124ac02e62f49572a4e2f6f571a5019047d40027e56e35593b5cc373c4a5a39b100c3377ba93  uboot-qemu-armhf-2017.05.tar.bz2"

@@ -5,7 +5,7 @@ pkgdesc="QEMU armhf"
 url="https://github.com/postmarketOS"
 arch="noarch"
 license="MIT"
-depends="linux-qemu-armhf"
+depends="linux-qemu-armhf uboot-qemu-armhf"
 makedepends=""
 install=""
 subpackages=""
@@ -21,4 +21,4 @@ package() {
 		"$pkgdir"/etc/deviceinfo
 }
 
-sha512sums="6a45bcb5e9b9ac4c0f9c4c246978af98d31cb878dbb8eb81fc21d7f6a670d4b5adf61633ce35a38ffb2cc4aa667e90ae681c0e91d94a6baf70621e8a91b54997  deviceinfo"
+sha512sums="fdd7071f6c6ef49e59c06027798eb53a8545e6558d9cfc64316e4637379484ec7bec3ed6a961aa56c224f9d4e2e57cf78f041c1687df5d35ffd38e53c376e95f  deviceinfo"
