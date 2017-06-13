@@ -10,6 +10,7 @@
 
 _vendor=qemu
 _flavor=qemu-armhf
+_config="config-${_flavor}"
 
 pkgname=linux-${_flavor}
 pkgver=4.11
@@ -17,7 +18,7 @@ case $pkgver in
 	*.*.*)  _kernver=${pkgver%.*};;
 	*.*) _kernver=$pkgver;;
 esac
-pkgrel=2
+pkgrel=3
 arch="armhf"
 pkgdesc="Qemu ARMHF kernel"
 url="https://github.com/torvalds/linux"
@@ -27,6 +28,7 @@ options="!strip !check !tracedeps"
 install=
 source="
 	$pkgname-$pkgver.zip::https://github.com/torvalds/linux/archive/v${pkgver}.zip
+	$_config
 "
 subpackages=""
 license="GPL2"
@@ -62,8 +64,9 @@ prepare() {
 	fi
 
 	mkdir -p "$srcdir"/build
+	cp "$srcdir"/$_config "$srcdir"/build/.config || return 1
 	make -C "$ksrcdir" O="$srcdir"/build ARCH="$_carch" HOSTCC="$HOSTCC" \
-		vexpress_defconfig
+		olddefconfig
 }
 
 
@@ -71,7 +74,8 @@ prepare() {
 # this is so we can do: 'abuild menuconfig' to reconfigure kernel
 menuconfig() {
 	cd "$srcdir"/build || return 1
-	make ARCH="$_carch" vexpress_defconfig
+	make ARCH="$_carch" menuconfig
+	cp .config "$startdir"/$_config
 }
 
 build() {
@@ -93,4 +97,5 @@ package() {
 		"$pkgdir/usr/share/kernel/$_flavor/kernel.release"
 }
 
-sha512sums="bfce6c290a7d372a018599fb835800a2cb5c3488883f4bd55c78b2197c6fb9420a8ac2f7740c054330948c62f0ffeafccdd386b6b57e8e4e794a74abb0ff12f6  linux-qemu-armhf-4.11.zip"
+sha512sums="bfce6c290a7d372a018599fb835800a2cb5c3488883f4bd55c78b2197c6fb9420a8ac2f7740c054330948c62f0ffeafccdd386b6b57e8e4e794a74abb0ff12f6  linux-qemu-armhf-4.11.zip
+a8f7f9725e443ac044ebc567dd0f3336925ed98caebf83058e6e8c4238eda6998ccfb7e80bed8138ae0cdbaa0603bf3e672ac08d0dc44886bfd557e07d553e98  config-qemu-armhf"
