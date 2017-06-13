@@ -1,0 +1,31 @@
+From aafa276daa8d6712e01808bb3b6fd762acc6b30d Mon Sep 17 00:00:00 2001
+From: Mathieu Maret <mathieu.maret@gmail.com>
+Date: Tue, 13 Jun 2017 23:10:23 +0200
+Subject: [PATCH] Modify default bootcmd for vexpress
+
+---
+ include/configs/vexpress_common.h | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/include/configs/vexpress_common.h b/include/configs/vexpress_common.h
+index 0880b62..3e414c3 100644
+--- a/include/configs/vexpress_common.h
++++ b/include/configs/vexpress_common.h
+@@ -184,8 +184,12 @@
+ 
+ /* Basic environment settings */
+ #define CONFIG_BOOTCOMMAND \
+-	"run distro_bootcmd; " \
+-	"run bootflash; "
++        "mmc rescan;"\
++        "ext4load mmc 0 0x62008000 vmlinuz-qemu-armhf;"\
++        "ext4load mmc 0 0x61008000 initramfs-qemu-armhf;"\
++        "ext4load mmc 0 0x60008000 vexpress-v2p-ca9.dtb;"\
++        "setenv bootargs 'initrd=0x61008000,8M';"\
++        "bootz 0x62008000 - 0x60008000;"\
+ 
+ #define BOOT_TARGET_DEVICES(func) \
+         func(MMC, mmc, 1) \
+-- 
+2.13.0
+
